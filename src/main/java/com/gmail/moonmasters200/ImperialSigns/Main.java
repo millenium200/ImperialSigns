@@ -26,10 +26,11 @@ public class Main
     Bukkit.getServer().getPluginManager().registerEvents(this, this);
   }
   
-  HashMap<String, Integer> soupCoolDown1 = new HashMap();
-  HashMap<String, Integer> soupCoolDownAll = new HashMap();
+  HashMap<String, Integer> soupCoolDown1 = new HashMap<String, Integer>();
+  HashMap<String, Integer> soupCoolDownAll = new HashMap<String, Integer>();
   public final String oneBowl = ChatColor.GOLD + "[" + ChatColor.RED + "Soup" + ChatColor.GOLD + "]";
   public final String allBowls = ChatColor.GOLD + "[" + ChatColor.RED + "Fillall" + ChatColor.GOLD + "]";
+  public final String mystery = ChatColor.DARK_BLUE + "[Mystery]";
   int task;
   private Object bleh;
   
@@ -72,6 +73,17 @@ public class Main
     }
     Sign sign = (Sign)b.getState();
     String line = sign.getLine(0);
+    String playerName = p.getName().toString();
+    int cost;
+    if (sign.getLine(1).toString().equals(""))
+    {
+      cost = 0;
+    }
+    else
+    {
+      cost = Integer.parseInt(sign.getLine(1).toString());
+    }
+    
     if (line.equals(this.oneBowl))
     {
       if (this.soupCoolDown1.containsKey(p.getName()))
@@ -120,6 +132,22 @@ public class Main
       
       
       
+    }
+    else if (line.equalsIgnoreCase(this.mystery))
+    {
+      int randomNumber = 0;
+      String effect = null;
+      switch (randomNumber)
+      {
+      case 1:
+      {
+        effect = "speed";
+      }
+      
+      }
+      
+      effect(playerName, effect, 120, 1);
+      subtractCost(playerName, cost);
     }
   }
   
@@ -180,9 +208,16 @@ public class Main
       fMinutes + fSeconds;
   }
   
-  public void subtractCost(String playerName, String cost)
+  public void subtractCost(String playerName, int cost)
   {
     /** Command: /points remove <amount> <player> */
     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "points remove " + cost + " " + playerName);
+  }
+  
+  public void effect(String playerName, String effect, int time, int amplifier)
+  {
+    /** /effect <player> <effect|clear> [seconds] [amplifier] */
+    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect " + playerName + " " + effect + " "
+        + time + amplifier);
   }
 }
